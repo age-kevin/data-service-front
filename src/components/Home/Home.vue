@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div>
     <el-scrollbar style="height: 100%;">
       <bread-crumb></bread-crumb>
       <div class="tablePage">
@@ -21,7 +21,6 @@
         <div class="toolbarData">
           <el-table 
             :data="tableData"
-            height="380px"
             stripe style="overflow: hidden;"
             v-loading="loading"
           >
@@ -31,32 +30,23 @@
               label="序号"
               width="80px">
             </el-table-column>
-            <el-table-column prop="name" align="center" label="类型" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="类别" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="名称" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="任务内容" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="重要程度" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="安排时间" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="责任部门" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="责任人" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="状态" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="name" align="center" label="进度" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column
+            <el-table-column prop="idData" align="center" label="数据ID" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="userName" align="center" label="用户名" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="userNumber" align="center" label="用户编号" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="profit" align="center" label="收益" :show-overflow-tooltip="true"></el-table-column>
+            <!-- <el-table-column
               align="center"
               label="操作">
               <template slot-scope="scope">
                 <el-button
-                  v-if="!showBtn[scope.$index]"
                   size="mini"
                   @click.native="handleEdit(scope.$index, scope.row)"
                 >编辑</el-button>
                 <el-button
-                  v-if="showBtn[scope.$index]"
                   size="mini"
                   @click.native="handleUpdate(scope.$index, scope.row)"
                 >更新</el-button>
                 <el-button
-                  v-if="showBtn[scope.$index]"
                   size="mini"
                   @click.native="handelCancel(scope.$index, scope.row)"
                 >取消</el-button>
@@ -66,11 +56,11 @@
                   @click.native="handleDelete(scope.$index, scope.row)"
                 >删除</el-button>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </div>
 
-        <div class="toolbar-pagination">
+        <!-- <div class="toolbar-pagination">
           <div class="block">
             <el-pagination 
                 @size-change="handleSizeChange" 
@@ -81,53 +71,52 @@
                 :page-count="totalNum"
             ></el-pagination>
           </div>
-        </div>
+        </div> -->
       </div>
     </el-scrollbar>
   </div>
 </template>
 
 <script>
+import { GetDataList } from '@/axios/Api/Common'
+
 let Page = 1
 export default {
   data () {
     return {
-      form: {
-        id: '',
-        type: '',
-        groupType: '',
-        qtType: 4,
-        difficulty: '',
-        belong: '',
-        question: '',
-        pageSize: 10,
-        pageNum: 1
-      },
       tableData: [],
       pagedata:{
         pageNum: Page,
         pageSize: 10
       },
       totalNum: 0,
-      loading: false,
-      addForm: {
-        name : ''
-      },
+      loading: false
     }
   },
   methods: {
     GetPageList() {
-      this.loading = false
-    },
-    add() {
-      this.$router.push('/TaskAdd')
+      GetDataList({
+        // pageNum: this.pagedata.pageNum,
+        // pageSize: this.pagedata.pageSize
+      }).then(res => {
+        let that = this // this指向vue实例失效
+        if (res.rcCode == 200) {
+          this.loading = false
+          // this.totalNum = res.count
+          this.tableData = res.data
+        } else {
+          this.loading = false
+          this.tableData = []
+          // this.totalNum = 0
+        }
+      })
     },
     reset() {
       let that = this
       this.loading = true
       setTimeout(function () {
-        that.pagedata.pageNum = 1
-        Page = that.pagedata.pageNum
+        // that.pagedata.pageNum = 1
+        // Page = that.pagedata.pageNum
         that.GetPageList()
       }, 1000)
     },

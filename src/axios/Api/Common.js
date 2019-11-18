@@ -43,3 +43,15 @@ export function ResetPassword (obj) {
     }
   })
 }
+
+/**
+ * 获取数据列表
+ * params {
+ * }
+ */
+export function GetDataList (obj) {
+  return commonAxios.get('age/query/QueryDataDetail/v1.0', {
+    params: {
+    }
+  })
+}

@@ -105,9 +105,15 @@ export default {
   transition: left .3s;
 }
 
-// .routerView {
-//   margin-top: r(20);
-// }
+.routerView {
+  position: fixed;
+  top: r(100);
+  left: r(342);
+  right: r(0);
+  bottom: r(0);
+  overflow: auto;
+  transition: left .3s;
+}
 </style>
 
 <style scoped lang="scss" type="text/css">
