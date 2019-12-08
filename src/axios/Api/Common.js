@@ -4,15 +4,33 @@ import store from '@/store/index'
 /**
  * 登录
  * params {
- *     userNumber,
+ *     userName,
  *     password
  * }
  */
 export function Login (obj) {
-  return commonAxios.get('user/login.do', {
+  return commonAxios.get('age/login', {
     params: {
-      userNumber: obj.userNumber,
+      userName: obj.userName,
       password: obj.password
+    }
+  })
+}
+
+/**
+ * 注册
+ * params {
+ *     userName,
+ *     password
+ *     group
+ * }
+ */
+export function Regist (obj) {
+  return commonAxios.get('age/register/UserRegister/v1.0', {
+    params: {
+      userName: obj.userName,
+      password: obj.password,
+      group: obj.group
     }
   })
 }

@@ -4,7 +4,7 @@
     <top-nav v-on:headerByValue="headerByValue" v-on:isClick="isClick"></top-nav>
     <left-menu v-on:leftMenuByValue="leftMenuByValue" :isCollapse="isCollapse"></left-menu>
     <div class="right_content" :class="{ 'isShrink': isCollapse }">
-      <router-view class="routerView" />
+      <router-view class="routerView" :class="{ 'isShrink': isCollapse }" />
     </div>
 
     <!-- 弹窗 -->
@@ -112,6 +112,11 @@ export default {
   right: r(0);
   bottom: r(0);
   overflow: auto;
+  transition: left .3s;
+}
+
+.routerView.isShrink {
+  left: r(84);
   transition: left .3s;
 }
 </style>

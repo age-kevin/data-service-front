@@ -6,7 +6,7 @@ export function setCookie (cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
   var expires = 'expires=' + d.toUTCString();
-  var cookies = cname + '=' + cvalue + ';expires=' + expires + ';path=/; domain=.ihaopin.com';
+  var cookies = cname + '=' + cvalue + ';expires=' + expires + ';path=/;';
   document.cookie = cookies;
 }
 // 获取cookie

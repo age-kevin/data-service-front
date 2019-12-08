@@ -32,7 +32,7 @@ export default {
       },
       isCollapse: false,
       // nickname: this.$store.state.userInfo.nickname
-      nickname: 'Ferryamn'
+      nickname: '测试'
     }
   },
   methods: {
@@ -43,23 +43,28 @@ export default {
     },
     logout() {
       console.log('submit!')
-      this.commonAxios.get("admin/loginout",({
-          params: this.form
-      }))
-      .then(res => {
-        console.log('success')
-        if (res.code === 200) {
-          console.log('success')
-          // vuex中存值
-          this.$store.commit('saveAccessToken', '')
-          // 在浏览器的cookie中存值
-          sessionStorage.setItem("access_token", '')
-          this.$router.push('/login')
-        }
-      })
-      .catch(err => {
-        console.log('error')
-      })
+      // vuex中存值
+      this.$store.commit('saveAccessToken', '')
+      // 在浏览器的cookie中存值
+      sessionStorage.setItem("access_token", '')
+      this.$router.push('/login')
+      // this.commonAxios.get("admin/loginout",({
+      //     params: this.form
+      // }))
+      // .then(res => {
+      //   console.log('success')
+      //   if (res.code === 200) {
+      //     console.log('success')
+      //     // vuex中存值
+      //     this.$store.commit('saveAccessToken', '')
+      //     // 在浏览器的cookie中存值
+      //     sessionStorage.setItem("access_token", '')
+      //     this.$router.push('/login')
+      //   }
+      // })
+      // .catch(err => {
+      //   console.log('error')
+      // })
     },
     resetPassword() {
       this.$emit('isClick', 'click')

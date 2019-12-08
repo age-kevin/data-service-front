@@ -1,12 +1,8 @@
 <template>
-    <div class="login" ref="newLogin">
+    <div class="regist" ref="newRegist">
       <div class="content">
-        <div>
-          <div class="head">
-            <!-- <i></i> -->
-            <span>后台管理系统</span>
-          </div>
-          <div class="title">账号密码登录</div>
+        <div class="regist_body">
+          <div class="title">用户注册</div>
           <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" class="ruleForm" @submit.native.prevent>
             <el-form-item prop="userName" class="userName">
               <el-input
@@ -19,7 +15,7 @@
                 <span slot="prefix" class="icon-user"></span>
               </el-input>
             </el-form-item>
-            <el-form-item prop="password" class="password" style="margin-bottom: 10px;">
+            <el-form-item prop="password" class="password">
               <el-input
                 inline
                 :type="inputType"
@@ -31,25 +27,17 @@
                 <span slot="suffix" @click="switchPass" :class="inputType=='password'?'eye-close':'eye-open'"></span>
               </el-input>
             </el-form-item>
-            <el-form-item class="checked_line">
-              <label style="flex: 1; text-align: left;">
-                <el-checkbox v-model="ruleForm.checked" style="display: none;">记住密码</el-checkbox>
-              </label>
-              <label style="flex: 1; text-align: right;">
-                <router-link to='/Regist' style="text-decoration: none;color: rgba(16, 67, 159, 0.8);">注&nbsp;&nbsp;册</router-link>
-              </label>
-            </el-form-item>
             <el-form-item>
               <el-button
-                class="login-btn"
+                class="regist-btn"
                 type="primary"
                 style="width:100%;"
                 native-type="submit"
                 :loading="loadingState"
                 @click.native="onSubmit('ruleForm')"
-              >登&nbsp;&nbsp;录</el-button>
+              >注&nbsp;&nbsp;册</el-button>
             </el-form-item>
-            <!-- <div class="login-link" @click="$router.push('/Regist')">立即注册</div> -->
+            <!-- <div class="regist-link" @click="$router.push('/Regist')">立即注册</div> -->
           </el-form>
         </div>
       </div>
@@ -59,18 +47,17 @@
 
 <script>
   import { Base64 } from 'js-base64';
-  import { Login } from '../axios/Api/Common'
-  import { setCookie, getCookie, clearCookie } from '../utils/cookie'
-
+  import { Regist } from '../axios/Api/Common'
   export default {
-    name: "login",
+    name: "regist",
     data () {
       return {
         inputType: 'password',
         ruleForm: {
           userName: '',
           password: '',
-          checked: false // 是否选中记住密码 true为选中
+          group: 1,
+          checked: false
         },
         rules: {
           userName: [
@@ -101,18 +88,15 @@
           // 校验是否通过
           if (valid) {
             // 校验通过后base64加密
-            Login({
+            Regist({
               userName: this.ruleForm.userName,
-              password: Base64.encode(this.ruleForm.password) // 校验通过后base64加密
+              password: Base64.encode(this.ruleForm.password), // 校验通过后base64加密
+              group: this.ruleForm.group
             }).then(res => {
               let that = this // this指向vue实例失效
               if (res.rcCode == 200) {
                 this.loadingState = false
                 let items = res.data
-                // vuex中存值
-                this.$store.commit('saveAccessToken', items.token)
-                // 在浏览器的cookie中存值
-                sessionStorage.setItem("access_token", items.token)
                 if (items == '1') {
                   this.$message({
                     message: res.message,
@@ -120,29 +104,13 @@
                   })
                 } else {
                   this.$message({
-                    message: '登录成功！',
+                    message: '注册成功！',
                     type: 'success'
                   })
                   setTimeout(function(){
-                    that.$router.push('/home')
+                    that.$router.push('/Login')
                   }, 1000)
                 }
-                // // 判断是否选择记录密码
-                // if (this.ruleForm.checked == true) {
-                //   // 传入账号，密码，保存天数
-                //   let userName = this.ruleForm.userName
-                //   let password = Base64.encode(this.ruleForm.password)
-                //   // 保存cookie
-                //   setCookie('userName', userName, 30)
-                //   setCookie('password', password, 30)
-                //   setCookie('checked', this.ruleForm.checked, 30)
-                // } else {
-                //   // 清空Cookie
-                //   clearCookie('userName')
-                //   clearCookie('password')
-                //   clearCookie('checked')
-                // }
-                
               } else {
                 this.loadingState = false
                 this.$message({
@@ -154,6 +122,7 @@
               this.loadingState = false
             })
           } else {
+            this.loadingState = false
             return false
           }
         })
@@ -163,11 +132,11 @@
 </script>
 
 <style scoped lang="scss">
-  .login {
+  .regist {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: url(../assets/images/bg/bg_all.jpg);
+    background-image: url(../assets/images/bg/bg.jpg);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
@@ -183,44 +152,24 @@
   }
   .content {
     position: absolute;
-    right: r(150);
-    top: 50%;
-    width: r(388);
-    // height: 100%;
+    left: 50%;
+    top: 0;
+    // width: r(388);
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    -webkit-transform: translate(0,-50%);
-    -moz-transform: translate(0,-50%);
-    transform:translate(0,-50%);
-    background-color: #fff;
-    padding: r(50) r(100);
-    border-radius: 4px;
-    .head {
-      margin: 0 auto r(30);
-      font-size: 0;
-      i {
-        display: inline-block;
-        width: r(50);
-        height: r(48);
-        background: url('../assets/images/common/logo_black.png') center no-repeat;
-        background-size: contain;
-        vertical-align: middle;
-        margin-right: r(13);
-      }
-      span {
-        font-size: r(34);
-        line-height: r(34);
-        color: #333333;
-        // color: #10439f;
-        font-weight: bold;
-        vertical-align: middle;
-        font-family:MicrosoftYaHei-Bold;
-      }
+    -webkit-transform: translate(-50%,0);
+    -moz-transform: translate(-50%,0);
+    transform:translate(-50%,0);
+    .regist_body {
+      padding: 40px;
+      border-radius: 8px;
+      background-color: #fff;
     }
     .title {
       max-width: r(250);
-      font-size: r(18);
+      font-size: r(24);
       // color: #333;
       color: rgba($color: #10439f, $alpha: 0.8);
       font-weight: bold;
@@ -256,12 +205,12 @@
         margin-left: r(15);
       }
     }
-    .login-btn {
+    .regist-btn {
       background:rgba(16,67,159,1);
       border-radius:6px;
       font-size: r(22);
     }
-    .login-link {
+    .regist-link {
       text-align: left;
       color: #10439F;
       font-size: r(22);
@@ -294,7 +243,7 @@
   }
 </style>
 <style lang="scss">
-  .login {
+  .regist {
     .el-input__inner {
       font-size: r(22);
       background: #F8F8F8;

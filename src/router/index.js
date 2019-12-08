@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
-// import Regist from '@/components/Regist'
+import Regist from '@/components/Regist'
 // 默认页面布局
 import Layout from '@/components/Layout'
 // 首页模块页面设置
@@ -41,6 +41,10 @@ export default new Router({
       path: '/Login',
       name: 'Login',
       component: Login
+    }, {
+      path: '/Regist',
+      name: 'Regist',
+      component: Regist
     },
   ]
 })

@@ -18,11 +18,15 @@ commonAxios.interceptors.request.use(
     config => {
         if (config.method === 'post' || config.method === 'put' || config.method === 'delete') {
             config.headers = {
-                'Content-Type': 'application/x-www-form-urlencoded' // 设置跨域头部
+                'Content-Type': 'application/x-www-form-urlencoded', // 设置跨域头部
                 // 'Content-Type': 'multipart/form-data'
+                'token': sessionStorage.getItem('access_token')
             };
             config.data.token = sessionStorage.getItem('access_token')
         } else {
+            config.headers = {
+                'token': sessionStorage.getItem('access_token')
+            };
             config.params || (config.params = {})
             config.params.token = sessionStorage.getItem('access_token')
         }
